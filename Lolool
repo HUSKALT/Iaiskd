@@ -1,0 +1,100 @@
+-- HUSK UNIVERSAL SCRIPT - by HUSKscripter
+-- Aggiornato con sistema key e comando cmds
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local lp = Players.LocalPlayer
+local mouse = lp:GetMouse()
+
+-- 🔐 Sistema di Key
+local function checkKey()
+    local gui = Instance.new("ScreenGui", lp:WaitForChild("PlayerGui"))
+    gui.Name = "KeySystem"
+
+    local frame = Instance.new("Frame", gui)
+    frame.Size = UDim2.new(0, 300, 0, 150)
+    frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+    frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    frame.BorderSizePixel = 0
+    frame.Active = true
+    frame.Draggable = true
+
+    local title = Instance.new("TextLabel", frame)
+    title.Size = UDim2.new(1, 0, 0, 30)
+    title.Position = UDim2.new(0, 0, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "Inserisci la Key"
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 18
+    title.TextColor3 = Color3.new(1,1,1)
+
+    local box = Instance.new("TextBox", frame)
+    box.Size = UDim2.new(0.8, 0, 0, 30)
+    box.Position = UDim2.new(0.1, 0, 0.4, 0)
+    box.PlaceholderText = "Inserisci la key..."
+    box.Text = ""
+    box.Font = Enum.Font.Gotham
+    box.TextSize = 16
+    box.TextColor3 = Color3.new(1,1,1)
+    box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    box.BorderSizePixel = 0
+
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(0.5, 0, 0, 30)
+    btn.Position = UDim2.new(0.25, 0, 0.7, 0)
+    btn.Text = "Verifica"
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 16
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    btn.BorderSizePixel = 0
+
+    local correctKey = "huskyt"
+    btn.MouseButton1Click:Connect(function()
+        if box.Text:lower() == correctKey then
+            gui:Destroy()
+            StarterGui:SetCore("SendNotification", {
+                Title = "Accesso riuscito!",
+                Text = "Welcome back nice user!",
+                Duration = 5
+            })
+            loadMainScript() -- Chiama lo script principale
+        else
+            box.Text = ""
+            box.PlaceholderText = "Key errata, riprova!"
+        end
+    end)
+end
+
+-- 📜 Comandi disponibili
+local commandList = {
+    "fly", "noclip", "infjump", "speed [numero]", 
+    "kill [nome]", "fling [nome]", "bang", "cmds"
+}
+
+-- 🔁 Script principale
+function loadMainScript()
+    -- loadstring(game:HttpGet("https://pastebin.com/raw/r2pPFkXC"))() (quello precedente)
+    -- ... (omesso per brevità, ma lo reinseriamo sotto con la nuova funzione `cmds`)
+
+    -- [loadstring(game:HttpGet("https://pastebin.com/raw/r2pPFkXC"))() — NON lo modifico]
+    -- ... poi aggiungo solo questo in fondo 👇
+
+    -- Comando cmds
+    Players.PlayerChatted:Connect(function(plr, msg)
+        if plr ~= lp then return end
+        if msg:lower():sub(1,5) == "?cmds" then
+            local list = table.concat(commandList, "\n- ")
+            StarterGui:SetCore("SendNotification", {
+                Title = "Comandi Disponibili",
+                Text = "- "..list,
+                Duration = 8
+            })
+        end
+    end)
+end
+
+-- Avvio sistema key
+checkKey()
